@@ -17,16 +17,14 @@ jobs:
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
-          scp -o StrictHostKeyChecking=no -i private_key.pem -r /Users/mac/Documents/MY-URL/* ubuntu@13.60.197.85:~/my-new-project
+          echo -n "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem  # This sets permissions in the GitHub Actions environment
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r ./MY-URL/* ubuntu@13.60.197.85:~/my-new-project
           
       - name: SSH into EC2 and restart NGINX (or another web server)
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
+          echo -n "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem  # Set permissions again here
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@13.60.197.85 'sudo systemctl restart nginx'
